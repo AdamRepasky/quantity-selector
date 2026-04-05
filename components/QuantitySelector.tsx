@@ -5,7 +5,7 @@ import { QuantitySelectorProps } from '../types';
 // TODO: Implement the quantity selector component
 // Structure:
 // - Top: Current amount display
-// - Middle: Horizontal increment/decrement buttons with value in between
+// - Middle: 6 horizontal buttons (-10, -5, -1, [change amount], +1, +5, +10)
 // - Bottom: Resulting quantity display
 
 export default function QuantitySelector({
@@ -16,12 +16,8 @@ export default function QuantitySelector({
   style,
 }: QuantitySelectorProps) {
   // TODO: Implement increment/decrement handlers
-  const handleIncrement = () => {
-    // TODO: Implement increment logic
-  };
-
-  const handleDecrement = () => {
-    // TODO: Implement decrement logic
+  const handleButtonPress = (value: number) => {
+    // TODO: Implement button press logic
   };
 
   return (
@@ -29,37 +25,71 @@ export default function QuantitySelector({
       {/* TODO: Current amount display */}
       <View style={styles.currentAmountContainer}>
         <Text style={styles.currentAmountText}>
-          {/* TODO: Display current amount */}
+          Current Quantity: {currentAmount}
         </Text>
       </View>
 
-      {/* TODO: Increment/decrement controls */}
+      {/* TODO: 6 horizontal increment/decrement buttons */}
       <View style={styles.controlsContainer}>
         <TouchableOpacity 
           style={styles.button}
-          onPress={handleDecrement}
-          // TODO: Implement decrement functionality
+          onPress={() => handleButtonPress(-10)}
+          // TODO: Implement -10 functionality
         >
-          <Text style={styles.buttonText}>-</Text>
+          <Text style={styles.buttonText}>-10</Text>
         </TouchableOpacity>
-        
-        <Text style={styles.incrementValueText}>
-          {/* TODO: Display increment value */}
-        </Text>
         
         <TouchableOpacity 
           style={styles.button}
-          onPress={handleIncrement}
-          // TODO: Implement increment functionality
+          onPress={() => handleButtonPress(-5)}
+          // TODO: Implement -5 functionality
         >
-          <Text style={styles.buttonText}>+</Text>
+          <Text style={styles.buttonText}>-5</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={() => handleButtonPress(-1)}
+          // TODO: Implement -1 functionality
+        >
+          <Text style={styles.buttonText}>-1</Text>
+        </TouchableOpacity>
+        
+        <View style={styles.incrementDisplay}>
+          <Text style={styles.incrementText}>
+            {resultingQuantity - currentAmount > 0 ? `+${resultingQuantity - currentAmount}` : resultingQuantity - currentAmount}
+          </Text>
+        </View>
+        
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={() => handleButtonPress(1)}
+          // TODO: Implement +1 functionality
+        >
+          <Text style={styles.buttonText}>+1</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={() => handleButtonPress(5)}
+          // TODO: Implement +5 functionality
+        >
+          <Text style={styles.buttonText}>+5</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={() => handleButtonPress(10)}
+          // TODO: Implement +10 functionality
+        >
+          <Text style={styles.buttonText}>+10</Text>
         </TouchableOpacity>
       </View>
 
       {/* TODO: Resulting quantity display */}
       <View style={styles.resultingQuantityContainer}>
         <Text style={styles.resultingQuantityText}>
-          {/* TODO: Display resulting quantity */}
+          Resulting quantity: {resultingQuantity}
         </Text>
       </View>
     </View>
@@ -78,16 +108,42 @@ const styles = StyleSheet.create({
     // TODO: Add current amount text styles
   },
   controlsContainer: {
-    // TODO: Add controls container styles (horizontal layout)
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
   },
   button: {
-    // TODO: Add button styles
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#0056CC',
+    minWidth: 40,
+    alignItems: 'center',
   },
   buttonText: {
-    // TODO: Add button text styles
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  incrementDisplay: {
+    backgroundColor: '#F0F0F0',
+    borderWidth: 1,
+    borderColor: '#0056CC',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    minWidth: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  incrementText: {
+    color: '#333',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   incrementValueText: {
-    // TODO: Add increment value text styles
+    // TODO: Add increment value text styles (removed since we now use buttons)
   },
   resultingQuantityContainer: {
     // TODO: Add resulting quantity styles
