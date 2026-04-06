@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { QuantitySelectorProps } from '../types';
+
+// Responsive sizing based on screen width
+const screenWidth = Dimensions.get('window').width;
+const buttonWidth = Math.min(60, screenWidth / 8);
+const inputWidth = Math.min(70, screenWidth / 6);
 
 // TODO: Implement the quantity selector component
 // Structure:
@@ -159,12 +164,12 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#ebeff2',
-    paddingHorizontal: 24,
-    paddingVertical: 14,
+    paddingHorizontal: 8,
+    paddingVertical: 10,
     borderWidth: 1,
     borderColor: '#d9dcdf',
-    width: 70,
-    height: 50,
+    width: buttonWidth,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 12,
   },
   incrementDisplay: {
     backgroundColor: '#F0F0F0',
@@ -201,10 +206,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#d9dcdf',
-    paddingHorizontal: 24,
-    paddingVertical: 14,
-    width: 70,
-    height: 50,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    width: inputWidth,
+    height: 40,
     textAlign: 'center',
     fontSize: 14,
     color: '#333',
