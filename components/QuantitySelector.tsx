@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { QuantitySelectorProps } from '../types';
 
@@ -29,8 +29,16 @@ export default function QuantitySelector({
   // State for resulting quantity text input
   const [resultingText, setResultingText] = useState(currentAmount.toString());
   
+  // Loading state to prevent layout collapse
+  const [isLoaded, setIsLoaded] = useState(false);
+  
   // Calculate resulting quantity (current + increment)
   const calculatedResultingQuantity = currentAmount + increment;
+
+  // Set loaded state after component mounts to prevent layout collapse
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   // Handle button press to update increment value
   const handleButtonPress = (value: number) => {
@@ -88,48 +96,56 @@ export default function QuantitySelector({
 
   return (
     <View style={[styles.container, style]}>
-      {/* TODO: Current amount display */}
-      <View style={styles.currentAmountContainer}>
-        <Text style={styles.currentAmountText}>
-          Current Quantity:
-        </Text>
-        <Text style={styles.currentAmountValue}>
-          {currentAmount}
-        </Text>
-      </View>
+      {!isLoaded ? (
+        <View style={styles.loaderContainer}>
+          <Text style={styles.loaderText}>Loading...</Text>
+        </View>
+      ) : (
+        <>
+          {/* TODO: Current amount display */}
+          <View style={styles.currentAmountContainer}>
+            <Text style={styles.currentAmountText}>
+              Current Quantity:
+            </Text>
+            <Text style={styles.currentAmountValue}>
+              {currentAmount}
+            </Text>
+          </View>
 
-      {/* TODO: 6 horizontal increment/decrement buttons */}
-      <View style={styles.controlsContainer}>
-        {createButton(-10, styles.negativeButtonText, true, false)}
-        {createButton(-5, styles.negativeButtonText, false, false)}
-        {createButton(-1, styles.negativeButtonText, false, false)}
-        
-        <TextInput
-          style={styles.incrementInput}
-          value={incrementText}
-          onChangeText={handleTextChange}
-          placeholder="0"
-          keyboardType="numeric"
-        />
-        
-        {createButton(1, styles.positiveButtonText, false, false)}
-        {createButton(5, styles.positiveButtonText, false, false)}
-        {createButton(10, styles.positiveButtonText, false, true)}
-      </View>
+          {/* TODO: 6 horizontal increment/decrement buttons */}
+          <View style={styles.controlsContainer}>
+            {createButton(-10, styles.negativeButtonText, true, false)}
+            {createButton(-5, styles.negativeButtonText, false, false)}
+            {createButton(-1, styles.negativeButtonText, false, false)}
+            
+            <TextInput
+              style={styles.incrementInput}
+              value={incrementText}
+              onChangeText={handleTextChange}
+              placeholder="0"
+              keyboardType="numeric"
+            />
+            
+            {createButton(1, styles.positiveButtonText, false, false)}
+            {createButton(5, styles.positiveButtonText, false, false)}
+            {createButton(10, styles.positiveButtonText, false, true)}
+          </View>
 
-      {/* TODO: Resulting quantity display */}
-      <View style={styles.resultingQuantityContainer}>
-        <Text style={styles.resultingQuantityText}>
-          Resulting Quantity:
-        </Text>
-        <TextInput
-          style={styles.resultingInput}
-          value={resultingText}
-          onChangeText={handleResultingChange}
-          placeholder="0"
-          keyboardType="numeric"
-        />
-      </View>
+          {/* TODO: Resulting quantity display */}
+          <View style={styles.resultingQuantityContainer}>
+            <Text style={styles.resultingQuantityText}>
+              Resulting Quantity:
+            </Text>
+            <TextInput
+              style={styles.resultingInput}
+              value={resultingText}
+              onChangeText={handleResultingChange}
+              placeholder="0"
+              keyboardType="numeric"
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -138,6 +154,16 @@ export default function QuantitySelector({
 const styles = StyleSheet.create({
   container: {
     // TODO: Add container styles
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: 150,
+  },
+  loaderText: {
+    fontSize: 16,
+    color: '#666',
   },
   currentAmountContainer: {
     flexDirection: 'row',
@@ -213,6 +239,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#333',
+    zIndex: 1,
   },
   resultingQuantityContainer: {
     flexDirection: 'row',
