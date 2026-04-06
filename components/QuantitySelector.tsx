@@ -65,6 +65,22 @@ export default function QuantitySelector({
     onAmountChange?.(numericValue);
   };
 
+  // Helper function to create increment/decrement buttons
+  const createButton = (value: number, textStyle?: any, isFirst?: boolean, isLast?: boolean) => (
+    <TouchableOpacity 
+      style={[
+        styles.button,
+        isFirst && styles.firstButton,
+        isLast && styles.lastButton
+      ]}
+      onPress={() => handleButtonPress(value)}
+    >
+      <Text style={[styles.buttonText, textStyle]}>
+        {value > 0 ? `+${value}` : value.toString()}
+      </Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={[styles.container, style]}>
       {/* TODO: Current amount display */}
@@ -79,29 +95,9 @@ export default function QuantitySelector({
 
       {/* TODO: 6 horizontal increment/decrement buttons */}
       <View style={styles.controlsContainer}>
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => handleButtonPress(-10)}
-          // TODO: Implement -10 functionality
-        >
-          <Text style={[styles.buttonText, styles.negativeButtonText]}>-10</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => handleButtonPress(-5)}
-          // TODO: Implement -5 functionality
-        >
-          <Text style={[styles.buttonText, styles.negativeButtonText]}>-5</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => handleButtonPress(-1)}
-          // TODO: Implement -1 functionality
-        >
-          <Text style={[styles.buttonText, styles.negativeButtonText]}>-1</Text>
-        </TouchableOpacity>
+        {createButton(-10, styles.negativeButtonText, true, false)}
+        {createButton(-5, styles.negativeButtonText, false, false)}
+        {createButton(-1, styles.negativeButtonText, false, false)}
         
         <TextInput
           style={styles.incrementInput}
@@ -111,29 +107,9 @@ export default function QuantitySelector({
           keyboardType="numeric"
         />
         
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => handleButtonPress(1)}
-          // TODO: Implement +1 functionality
-        >
-          <Text style={[styles.buttonText, styles.positiveButtonText]}>+1</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => handleButtonPress(5)}
-          // TODO: Implement +5 functionality
-        >
-          <Text style={[styles.buttonText, styles.positiveButtonText]}>+5</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => handleButtonPress(10)}
-          // TODO: Implement +10 functionality
-        >
-          <Text style={[styles.buttonText, styles.positiveButtonText]}>+10</Text>
-        </TouchableOpacity>
+        {createButton(1, styles.positiveButtonText, false, false)}
+        {createButton(5, styles.positiveButtonText, false, false)}
+        {createButton(10, styles.positiveButtonText, false, true)}
       </View>
 
       {/* TODO: Resulting quantity display */}
@@ -192,6 +168,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  firstButton: {
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+  },
+  lastButton: {
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
   buttonText: {
     color: 'white',
     fontSize: 14,
@@ -223,7 +207,6 @@ const styles = StyleSheet.create({
     height: 50,
     textAlign: 'center',
     fontSize: 14,
-    fontWeight: 'bold',
     color: '#333',
   },
   resultingQuantityContainer: {
