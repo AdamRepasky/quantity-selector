@@ -84,7 +84,7 @@ export default function QuantitySelector({
           onPress={() => handleButtonPress(-10)}
           // TODO: Implement -10 functionality
         >
-          <Text style={styles.buttonText}>-10</Text>
+          <Text style={[styles.buttonText, styles.negativeButtonText]}>-10</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
@@ -92,7 +92,7 @@ export default function QuantitySelector({
           onPress={() => handleButtonPress(-5)}
           // TODO: Implement -5 functionality
         >
-          <Text style={styles.buttonText}>-5</Text>
+          <Text style={[styles.buttonText, styles.negativeButtonText]}>-5</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
@@ -100,7 +100,7 @@ export default function QuantitySelector({
           onPress={() => handleButtonPress(-1)}
           // TODO: Implement -1 functionality
         >
-          <Text style={styles.buttonText}>-1</Text>
+          <Text style={[styles.buttonText, styles.negativeButtonText]}>-1</Text>
         </TouchableOpacity>
         
         <TextInput
@@ -116,7 +116,7 @@ export default function QuantitySelector({
           onPress={() => handleButtonPress(1)}
           // TODO: Implement +1 functionality
         >
-          <Text style={styles.buttonText}>+1</Text>
+          <Text style={[styles.buttonText, styles.positiveButtonText]}>+1</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
@@ -124,7 +124,7 @@ export default function QuantitySelector({
           onPress={() => handleButtonPress(5)}
           // TODO: Implement +5 functionality
         >
-          <Text style={styles.buttonText}>+5</Text>
+          <Text style={[styles.buttonText, styles.positiveButtonText]}>+5</Text>
         </TouchableOpacity>
         
         <TouchableOpacity 
@@ -132,14 +132,14 @@ export default function QuantitySelector({
           onPress={() => handleButtonPress(10)}
           // TODO: Implement +10 functionality
         >
-          <Text style={styles.buttonText}>+10</Text>
+          <Text style={[styles.buttonText, styles.positiveButtonText]}>+10</Text>
         </TouchableOpacity>
       </View>
 
       {/* TODO: Resulting quantity display */}
       <View style={styles.resultingQuantityContainer}>
         <Text style={styles.resultingQuantityText}>
-          Resulting quantity:
+          Resulting Quantity:
         </Text>
         <TextInput
           style={styles.resultingInput}
@@ -167,12 +167,12 @@ const styles = StyleSheet.create({
   currentAmountText: {
     position: 'absolute',
     right: '60%',
+    fontSize: 12,
     // TODO: Add current amount text styles
   },
   currentAmountValue: {
     textAlign: 'center',
-    fontSize: 14,
-    fontWeight: 'bold',
+    fontSize: 12,
     color: '#333',
   },
   controlsContainer: {
@@ -182,48 +182,49 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   button: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    backgroundColor: '#ebeff2',
+    paddingHorizontal: 24,
+    paddingVertical: 14,
     borderWidth: 1,
-    borderColor: '#0056CC',
-    minWidth: 40,
+    borderColor: '#d9dcdf',
+    width: 70,
+    height: 50,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: 'bold',
   },
   incrementDisplay: {
     backgroundColor: '#F0F0F0',
     borderWidth: 1,
-    borderColor: '#0056CC',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    minWidth: 40,
+    borderColor: '#d9dcdf',
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    width: 70,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  incrementText: {
-    color: '#333',
-    fontSize: 14,
-    fontWeight: 'bold',
+  positiveButtonText: {
+    color: '#2e7d32',
+  },
+  negativeButtonText: {
+    color: '#ef5350',
   },
   incrementInput: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#ffffff',
     borderWidth: 1,
-    borderColor: '#0056CC',
-    paddingHorizontal: 2,
-    paddingVertical: 8,
-    width: 50,
+    borderColor: '#d9dcdf',
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    width: 70,
+    height: 50,
     textAlign: 'center',
     fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
-  },
-  incrementValueText: {
-    // TODO: Add increment value text styles (removed since we now use buttons)
   },
   resultingQuantityContainer: {
     flexDirection: 'row',
@@ -234,17 +235,17 @@ const styles = StyleSheet.create({
   resultingQuantityText: {
     position: 'absolute',
     right: '60%',
-    // TODO: Add resulting quantity text styles
+    fontSize: 12,
   },
   resultingInput: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#ffffff',
     borderWidth: 1,
-    borderColor: '#0056CC',
+    borderColor: '#d9dcdf',
     paddingHorizontal: 8,
     paddingVertical: 6,
     width: 60,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#333',
   },
