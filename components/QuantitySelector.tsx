@@ -7,11 +7,7 @@ const screenWidth = Dimensions.get('window').width;
 const buttonWidth = Math.min(60, screenWidth / 8);
 const inputWidth = Math.min(70, screenWidth / 6);
 
-// TODO: Implement the quantity selector component
-// Structure:
-// - Top: Current amount display
-// - Middle: 6 horizontal buttons (-10, -5, -1, [change amount], +1, +5, +10)
-// - Bottom: Resulting quantity display
+// Quantity selector component
 
 export default function QuantitySelector({
   currentAmount,
@@ -20,27 +16,15 @@ export default function QuantitySelector({
   onAmountChange,
   style,
 }: QuantitySelectorProps) {
-  // State for tracking the increment value
   const [increment, setIncrement] = useState(0);
-  
-  // State for text input
   const [incrementText, setIncrementText] = useState('0');
-  
-  // State for resulting quantity text input
   const [resultingText, setResultingText] = useState(currentAmount.toString());
-  
-  // Loading state to prevent layout collapse
   const [isLoaded, setIsLoaded] = useState(false);
   
-  // Calculate resulting quantity (current + increment)
-  const calculatedResultingQuantity = currentAmount + increment;
-
-  // Set loaded state after component mounts to prevent layout collapse
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
-  // Handle button press to update increment value
   const handleButtonPress = (value: number) => {
     const newIncrement = increment + value;
     setIncrement(newIncrement);
@@ -50,13 +34,10 @@ export default function QuantitySelector({
     onAmountChange?.(newResulting);
   };
 
-  // Handle text input change
   const handleTextChange = (text: string) => {
-    // Allow only numbers, +, and -
     const cleanedText = text.replace(/[^0-9+-]/g, '');
     setIncrementText(cleanedText);
     
-    // Convert text to number
     const numericValue = parseInt(cleanedText) || 0;
     setIncrement(numericValue);
     const newResulting = currentAmount + numericValue;
@@ -64,13 +45,10 @@ export default function QuantitySelector({
     onAmountChange?.(newResulting);
   };
 
-  // Handle resulting quantity change
   const handleResultingChange = (text: string) => {
-    // Allow only numbers
     const cleanedText = text.replace(/[^0-9]/g, '');
     setResultingText(cleanedText);
     
-    // Convert text to number and ensure non-negative
     const numericValue = Math.max(0, parseInt(cleanedText) || 0);
     const newIncrement = numericValue - currentAmount;
     setIncrement(newIncrement);
@@ -78,7 +56,6 @@ export default function QuantitySelector({
     onAmountChange?.(numericValue);
   };
 
-  // Helper function to create increment/decrement buttons
   const createButton = (value: number, textStyle?: any, isFirst?: boolean, isLast?: boolean) => (
     <TouchableOpacity 
       style={[
@@ -102,7 +79,6 @@ export default function QuantitySelector({
         </View>
       ) : (
         <>
-          {/* TODO: Current amount display */}
           <View style={styles.currentAmountContainer}>
             <Text style={styles.currentAmountText}>
               Current Quantity:
@@ -112,7 +88,6 @@ export default function QuantitySelector({
             </Text>
           </View>
 
-          {/* TODO: 6 horizontal increment/decrement buttons */}
           <View style={styles.controlsContainer}>
             {createButton(-10, styles.negativeButtonText, true, false)}
             {createButton(-5, styles.negativeButtonText, false, false)}
@@ -131,7 +106,6 @@ export default function QuantitySelector({
             {createButton(10, styles.positiveButtonText, false, true)}
           </View>
 
-          {/* TODO: Resulting quantity display */}
           <View style={styles.resultingQuantityContainer}>
             <Text style={styles.resultingQuantityText}>
               Resulting Quantity:
@@ -150,10 +124,9 @@ export default function QuantitySelector({
   );
 }
 
-// TODO: Implement proper styling
+// Component styling
 const styles = StyleSheet.create({
   container: {
-    // TODO: Add container styles
   },
   loaderContainer: {
     flex: 1,
@@ -169,13 +142,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // TODO: Add current amount styles
   },
   currentAmountText: {
     position: 'absolute',
     right: '60%',
     fontSize: 12,
-    // TODO: Add current amount text styles
   },
   currentAmountValue: {
     textAlign: 'center',
@@ -245,7 +216,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // TODO: Add resulting quantity styles
   },
   resultingQuantityText: {
     position: 'absolute',
