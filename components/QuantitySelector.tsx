@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { QuantitySelectorProps } from '../types';
 
 // TODO: Implement the quantity selector component
@@ -15,9 +15,54 @@ export default function QuantitySelector({
   onAmountChange,
   style,
 }: QuantitySelectorProps) {
-  // TODO: Implement increment/decrement handlers
+  // State for tracking the increment value
+  const [increment, setIncrement] = useState(0);
+  
+  // State for text input
+  const [incrementText, setIncrementText] = useState('0');
+  
+  // State for resulting quantity text input
+  const [resultingText, setResultingText] = useState(currentAmount.toString());
+  
+  // Calculate resulting quantity (current + increment)
+  const calculatedResultingQuantity = currentAmount + increment;
+
+  // Handle button press to update increment value
   const handleButtonPress = (value: number) => {
-    // TODO: Implement button press logic
+    const newIncrement = increment + value;
+    setIncrement(newIncrement);
+    setIncrementText(newIncrement > 0 ? `+${newIncrement}` : newIncrement.toString());
+    const newResulting = currentAmount + newIncrement;
+    setResultingText(newResulting.toString());
+    onAmountChange?.(newResulting);
+  };
+
+  // Handle text input change
+  const handleTextChange = (text: string) => {
+    // Allow only numbers, +, and -
+    const cleanedText = text.replace(/[^0-9+-]/g, '');
+    setIncrementText(cleanedText);
+    
+    // Convert text to number
+    const numericValue = parseInt(cleanedText) || 0;
+    setIncrement(numericValue);
+    const newResulting = currentAmount + numericValue;
+    setResultingText(newResulting.toString());
+    onAmountChange?.(newResulting);
+  };
+
+  // Handle resulting quantity change
+  const handleResultingChange = (text: string) => {
+    // Allow only numbers
+    const cleanedText = text.replace(/[^0-9]/g, '');
+    setResultingText(cleanedText);
+    
+    // Convert text to number and ensure non-negative
+    const numericValue = Math.max(0, parseInt(cleanedText) || 0);
+    const newIncrement = numericValue - currentAmount;
+    setIncrement(newIncrement);
+    setIncrementText(newIncrement > 0 ? `+${newIncrement}` : newIncrement.toString());
+    onAmountChange?.(numericValue);
   };
 
   return (
@@ -25,7 +70,10 @@ export default function QuantitySelector({
       {/* TODO: Current amount display */}
       <View style={styles.currentAmountContainer}>
         <Text style={styles.currentAmountText}>
-          Current Quantity: {currentAmount}
+          Current Quantity:
+        </Text>
+        <Text style={styles.currentAmountValue}>
+          {currentAmount}
         </Text>
       </View>
 
@@ -55,11 +103,13 @@ export default function QuantitySelector({
           <Text style={styles.buttonText}>-1</Text>
         </TouchableOpacity>
         
-        <View style={styles.incrementDisplay}>
-          <Text style={styles.incrementText}>
-            {resultingQuantity - currentAmount > 0 ? `+${resultingQuantity - currentAmount}` : resultingQuantity - currentAmount}
-          </Text>
-        </View>
+        <TextInput
+          style={styles.incrementInput}
+          value={incrementText}
+          onChangeText={handleTextChange}
+          placeholder="0"
+          keyboardType="numeric"
+        />
         
         <TouchableOpacity 
           style={styles.button}
@@ -89,8 +139,15 @@ export default function QuantitySelector({
       {/* TODO: Resulting quantity display */}
       <View style={styles.resultingQuantityContainer}>
         <Text style={styles.resultingQuantityText}>
-          Resulting quantity: {resultingQuantity}
+          Resulting quantity:
         </Text>
+        <TextInput
+          style={styles.resultingInput}
+          value={resultingText}
+          onChangeText={handleResultingChange}
+          placeholder="0"
+          keyboardType="numeric"
+        />
       </View>
     </View>
   );
@@ -102,10 +159,21 @@ const styles = StyleSheet.create({
     // TODO: Add container styles
   },
   currentAmountContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     // TODO: Add current amount styles
   },
   currentAmountText: {
+    position: 'absolute',
+    right: '60%',
     // TODO: Add current amount text styles
+  },
+  currentAmountValue: {
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
   },
   controlsContainer: {
     flexDirection: 'row',
@@ -142,13 +210,42 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+  incrementInput: {
+    backgroundColor: '#F0F0F0',
+    borderWidth: 1,
+    borderColor: '#0056CC',
+    paddingHorizontal: 2,
+    paddingVertical: 8,
+    width: 50,
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+  },
   incrementValueText: {
     // TODO: Add increment value text styles (removed since we now use buttons)
   },
   resultingQuantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     // TODO: Add resulting quantity styles
   },
   resultingQuantityText: {
+    position: 'absolute',
+    right: '60%',
     // TODO: Add resulting quantity text styles
+  },
+  resultingInput: {
+    backgroundColor: '#F0F0F0',
+    borderWidth: 1,
+    borderColor: '#0056CC',
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    width: 60,
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
