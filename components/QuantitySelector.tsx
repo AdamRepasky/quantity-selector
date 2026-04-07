@@ -1,17 +1,12 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import type { TextStyle } from 'react-native';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { QUANTITY_CONFIG } from '../constants/quantityConfig';
 import { QuantitySelectorProps } from '../types';
+import { cleanNumericInput, formatIncrementText, validateIncrement } from '../utils/quantityUtils';
+import { CurrentAmountDisplay } from './CurrentAmountDisplay';
+import { IncrementControls } from './IncrementControls';
+import { ResultingQuantityInput } from './ResultingQuantityInput';
 import { quantitySelectorStyles as styles } from './styles/QuantitySelector.styles';
-
-// Configuration constants
-const QUANTITY_CONFIG = {
-  MAX_INCREMENT: 100,
-  NEGATIVE_BUTTON_VALUES: [-10, -5, -1],
-  POSITIVE_BUTTON_VALUES: [1, 5, 10],
-  DEFAULT_INCREMENT: 0,
-  MIN_RESULTING_VALUE: 0,
-} as const;
 
 // TypeScript interfaces
 /**
@@ -30,48 +25,6 @@ export interface QuantitySelectorRef {
    */
   resetIncrement: (newAmount?: number) => void;
 }
-
-interface ButtonProps {
-  value: number;
-  textStyle?: TextStyle;
-  isFirst?: boolean;
-  isLast?: boolean;
-}
-
-// Validation utilities
-/**
- * Validates and clamps an increment value within acceptable bounds
- * @param value - The increment value to validate
- * @param currentAmount - The current quantity amount
- * @returns The validated increment value, clamped between [-currentAmount, 100]
- */
-const validateIncrement = (value: number, currentAmount: number): number => {
-  const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
-  const minIncrement = -currentAmount;
-  return Math.max(minIncrement, Math.min(maxIncrement, value));
-};
-
-/**
- * Formats an increment value for display with appropriate sign
- * @param increment - The increment value to format
- * @returns Formatted increment text (e.g., "+5", "-3", "0")
- */
-const formatIncrementText = (increment: number): string => {
-  return increment > 0 ? `+${increment}` : increment.toString();
-};
-
-/**
- * Cleans input text to contain only numeric characters (and optionally negative sign)
- * @param text - The input text to clean
- * @param allowNegative - Whether to allow negative sign
- * @returns Cleaned text containing only allowed numeric characters
- */
-const cleanNumericInput = (text: string, allowNegative: boolean = false): string => {
-  const pattern = allowNegative ? /[^0-9+-]/g : /[^0-9]/g;
-  return text.replace(pattern, '');
-};
-
-// Quantity selector component
 
 export default forwardRef(function QuantitySelector({
   currentAmount,
@@ -173,25 +126,6 @@ export default forwardRef(function QuantitySelector({
     onAmountChange?.(actualResulting);
   };
 
-  /**
-   * Creates a styled increment/decrement button component
-   * @param props - Button configuration properties
-   * @returns A TouchableOpacity button with appropriate styling
-   */
-  const createButton = ({ value, textStyle, isFirst, isLast }: ButtonProps) => (
-    <TouchableOpacity 
-      style={[
-        styles.button,
-        isFirst && styles.firstButton,
-        isLast && styles.lastButton
-      ]}
-      onPress={() => handleButtonPress(value)}
-    >
-      <Text style={[styles.buttonText, textStyle]}>
-        {formatIncrementText(value)}
-      </Text>
-    </TouchableOpacity>
-  );
 
   return (
     <View style={[styles.container, style]}>
@@ -201,51 +135,18 @@ export default forwardRef(function QuantitySelector({
         </View>
       ) : (
         <>
-          <View style={styles.currentAmountContainer}>
-            <Text style={styles.currentAmountText}>
-              Current Quantity:
-            </Text>
-            <Text style={styles.currentAmountValue}>
-              {currentAmount}
-            </Text>
-          </View>
+          <CurrentAmountDisplay currentAmount={currentAmount} />
 
-          <View style={styles.controlsContainer}>
-            {QUANTITY_CONFIG.NEGATIVE_BUTTON_VALUES.map((value, index) => (
-              <React.Fragment key={value}>
-                {createButton({ value, textStyle: styles.negativeButtonText, isFirst: index === 0, isLast: false })}
-              </React.Fragment>
-            ))}
-            
-            <TextInput
-              style={styles.incrementInput}
-              value={incrementText}
-              onChangeText={handleTextChange}
-              placeholder="0"
-              placeholderTextColor={styles.incrementInputPlaceholder.color}
-              keyboardType="numeric"
-            />
-            
-            {QUANTITY_CONFIG.POSITIVE_BUTTON_VALUES.map((value, index) => (
-              <React.Fragment key={value}>
-                {createButton({ value, textStyle: styles.positiveButtonText, isFirst: false, isLast: index === QUANTITY_CONFIG.POSITIVE_BUTTON_VALUES.length - 1 })}
-              </React.Fragment>
-            ))}
-          </View>
+          <IncrementControls
+            incrementText={incrementText}
+            onTextChange={handleTextChange}
+            onButtonPress={handleButtonPress}
+          />
 
-          <View style={styles.resultingQuantityContainer}>
-            <Text style={styles.resultingQuantityText}>
-              Resulting Quantity:
-            </Text>
-            <TextInput
-              style={styles.resultingInput}
-              value={resultingText}
-              onChangeText={handleResultingChange}
-              placeholder="0"
-              placeholderTextColor={styles.resultingInputPlaceholder.color}
-              keyboardType="numeric"
-            />
-          </View>
+          <ResultingQuantityInput
+            resultingText={resultingText}
+            onChangeText={handleResultingChange}
+          />
         </>
       )}
     </View>
