@@ -1,4 +1,5 @@
 // Type definitions for the quantity selector component
+import type { ViewStyle } from 'react-native';
 
 export interface QuantitySelectorProps {
   // Current amount displayed at the top
@@ -8,7 +9,7 @@ export interface QuantitySelectorProps {
   onAmountChange?: (newAmount: number) => void;
   
   // Optional styling props
-  style?: any;
+  style?: ViewStyle;
 }
 
 export interface FoodProductProps {
@@ -22,5 +23,5 @@ export interface FoodProductProps {
   onCancel?: () => void;
   
   // Optional styling props
-  style?: any;
+  style?: ViewStyle;
 }
