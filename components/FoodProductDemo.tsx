@@ -4,6 +4,12 @@ import { FoodProductProps } from '../types';
 import QuantitySelector, { QuantitySelectorRef } from './QuantitySelector';
 import { foodProductDemoStyles as styles } from './styles/FoodProductDemo.styles';
 
+// API constants
+const API_CONFIG = {
+  API_SUCCESS_RATE: 0.99,
+  NETWORK_DELAY_MS: 1500,
+} as const;
+
 // TypeScript interfaces
 interface ApiResponse {
   success: boolean;
@@ -18,7 +24,7 @@ interface ApiResponse {
 export default function FoodProductDemo({
   name,
   price,
-  initialQuantity = 1,
+  initialQuantity = 0,
   onSave,
   onCancel,
   style,
@@ -30,10 +36,10 @@ export default function FoodProductDemo({
   // Simulate async API call to save quantity
   const simulateApiCall = async (quantity: number): Promise<boolean> => {
     // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, API_CONFIG.NETWORK_DELAY_MS));
     
-    // Simulate API success (99% success rate for demo)
-    const isSuccess = Math.random() > 0.01;
+    // Simulate API success using configured success rate
+    const isSuccess = Math.random() < API_CONFIG.API_SUCCESS_RATE;
     
     if (isSuccess) {
       const response: ApiResponse = {

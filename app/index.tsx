@@ -8,7 +8,7 @@ export default function Index() {
       <FoodProductDemo
         name="Sample Food Product"
         price={9.99}
-        initialQuantity={1}
+        initialQuantity={55}
         onSave={(quantity) => console.log("Saved quantity:", quantity)}
         onCancel={() => console.log("Cancelled")}
       />

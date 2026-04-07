@@ -10,6 +10,7 @@ const QUANTITY_CONFIG = {
   NEGATIVE_BUTTON_VALUES: [-10, -5, -1],
   POSITIVE_BUTTON_VALUES: [1, 5, 10],
   DEFAULT_INCREMENT: 0,
+  MIN_RESULTING_VALUE: 0,
 } as const;
 
 // TypeScript interfaces
@@ -113,7 +114,7 @@ export default forwardRef(function QuantitySelector({
     const cleanedText = cleanNumericInput(text, false);
     setResultingText(cleanedText);
     
-    const numericValue = Math.max(0, parseInt(cleanedText) || 0);
+    const numericValue = Math.max(QUANTITY_CONFIG.MIN_RESULTING_VALUE, parseInt(cleanedText) || 0);
     const newIncrement = numericValue - currentAmount;
     const clampedIncrement = validateIncrement(newIncrement, currentAmount);
     
