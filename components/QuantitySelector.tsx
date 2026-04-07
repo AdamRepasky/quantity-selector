@@ -49,7 +49,7 @@ export default forwardRef(function QuantitySelector({
   style,
 }: QuantitySelectorProps, ref: React.Ref<QuantitySelectorRef>) {
   const [increment, setIncrement] = useState<number>(QUANTITY_CONFIG.DEFAULT_INCREMENT);
-  const [incrementText, setIncrementText] = useState(QUANTITY_CONFIG.DEFAULT_INCREMENT.toString());
+  const [incrementText, setIncrementText] = useState(formatIncrementText(QUANTITY_CONFIG.DEFAULT_INCREMENT));
   const [resultingText, setResultingText] = useState(currentAmount.toString());
   const [isLoaded, setIsLoaded] = useState(false);
   
@@ -85,7 +85,16 @@ export default forwardRef(function QuantitySelector({
 
   const handleTextChange = (text: string) => {
     const cleanedText = cleanNumericInput(text, true);
-    setIncrementText(cleanedText);
+    
+    // Allow user to type "-" without immediate formatting
+    if (cleanedText === '-' || cleanedText === '') {
+      setIncrementText(cleanedText);
+      setIncrement(0);
+      const newResulting = currentAmount + 0;
+      setResultingText(newResulting.toString());
+      onAmountChange?.(newResulting);
+      return;
+    }
     
     const numericValue = parseInt(cleanedText) || 0;
     const clampedIncrement = validateIncrement(numericValue, currentAmount);
@@ -94,10 +103,8 @@ export default forwardRef(function QuantitySelector({
     const newResulting = currentAmount + clampedIncrement;
     setResultingText(newResulting.toString());
     
-    // Auto-correct the increment input text if user exceeded limit
-    if (numericValue !== clampedIncrement) {
-      setIncrementText(formatIncrementText(clampedIncrement));
-    }
+    // Format display text with sign (cosmetic only)
+    setIncrementText(formatIncrementText(clampedIncrement));
     
     onAmountChange?.(newResulting);
   };
