@@ -39,8 +39,6 @@ export default function FoodProductDemo({
       {/* TODO: Quantity selector component */}
       <QuantitySelector
         currentAmount={initialQuantity}
-        resultingQuantity={initialQuantity}
-        incrementValue={1}
       />
 
       {/* TODO: Action buttons */}

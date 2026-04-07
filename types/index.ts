@@ -4,12 +4,6 @@ export interface QuantitySelectorProps {
   // Current amount displayed at the top
   currentAmount: number;
   
-  // Resulting quantity displayed at the bottom
-  resultingQuantity: number;
-  
-  // Increment/decrement value displayed between buttons
-  incrementValue: number;
-  
   // Callback when amount changes
   onAmountChange?: (newAmount: number) => void;
   
