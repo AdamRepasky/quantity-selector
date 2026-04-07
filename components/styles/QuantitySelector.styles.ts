@@ -81,6 +81,9 @@ export const quantitySelectorStyles = StyleSheet.create({
     color: '#333',
     zIndex: 1,
   },
+  incrementInputPlaceholder: {
+    color: '#999',
+  },
   resultingQuantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -106,5 +109,8 @@ export const quantitySelectorStyles = StyleSheet.create({
     borderBottomLeftRadius: 4,
     borderTopRightRadius: 4,
     borderBottomRightRadius: 4,
+  },
+  resultingInputPlaceholder: {
+    color: '#999',
   },
 });

@@ -149,6 +149,7 @@ export default forwardRef(function QuantitySelector({
               value={incrementText}
               onChangeText={handleTextChange}
               placeholder="0"
+              placeholderTextColor={styles.incrementInputPlaceholder.color}
               keyboardType="numeric"
             />
             
@@ -168,6 +169,7 @@ export default forwardRef(function QuantitySelector({
               value={resultingText}
               onChangeText={handleResultingChange}
               placeholder="0"
+              placeholderTextColor={styles.resultingInputPlaceholder.color}
               keyboardType="numeric"
             />
           </View>
