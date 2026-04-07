@@ -11,8 +11,6 @@ const inputWidth = Math.min(70, screenWidth / 6);
 
 export default function QuantitySelector({
   currentAmount,
-  resultingQuantity,
-  incrementValue,
   onAmountChange,
   style,
 }: QuantitySelectorProps) {
