@@ -25,9 +25,13 @@ export default function QuantitySelector({
 
   const handleButtonPress = (value: number) => {
     const newIncrement = increment + value;
-    setIncrement(newIncrement);
-    setIncrementText(newIncrement > 0 ? `+${newIncrement}` : newIncrement.toString());
-    const newResulting = currentAmount + newIncrement;
+    const maxIncrement = 1000;
+    const minIncrement = -currentAmount;
+    const clampedIncrement = Math.max(minIncrement, Math.min(maxIncrement, newIncrement));
+    
+    setIncrement(clampedIncrement);
+    setIncrementText(clampedIncrement > 0 ? `+${clampedIncrement}` : clampedIncrement.toString());
+    const newResulting = currentAmount + clampedIncrement;
     setResultingText(newResulting.toString());
     onAmountChange?.(newResulting);
   };
@@ -37,8 +41,12 @@ export default function QuantitySelector({
     setIncrementText(cleanedText);
     
     const numericValue = parseInt(cleanedText) || 0;
-    setIncrement(numericValue);
-    const newResulting = currentAmount + numericValue;
+    const maxIncrement = 1000;
+    const minIncrement = -currentAmount;
+    const clampedIncrement = Math.max(minIncrement, Math.min(maxIncrement, numericValue));
+    
+    setIncrement(clampedIncrement);
+    const newResulting = currentAmount + clampedIncrement;
     setResultingText(newResulting.toString());
     onAmountChange?.(newResulting);
   };
