@@ -44,7 +44,7 @@ export default forwardRef(function QuantitySelector({
   useImperativeHandle(ref, () => ({
     getCurrentValue: () => {
       const parsedValue = parseInt(resultingText);
-      let val = isNaN(parsedValue) ? 0 : parsedValue;
+      let val = isNaN(parsedValue) ? QUANTITY_CONFIG.DEFAULT_INCREMENT : parsedValue;
       return val;
     },
     resetIncrement: (newAmount?: number) => {
@@ -80,14 +80,14 @@ export default forwardRef(function QuantitySelector({
     // Allow user to type "-" without immediate formatting
     if (cleanedText === '-' || cleanedText === '') {
       setIncrementText(cleanedText);
-      setIncrement(0);
-      const newResulting = currentAmount + 0;
+      setIncrement(QUANTITY_CONFIG.DEFAULT_INCREMENT);
+      const newResulting = currentAmount + QUANTITY_CONFIG.DEFAULT_INCREMENT;
       setResultingText(newResulting.toString());
       onAmountChange?.(newResulting);
       return;
     }
     
-    const numericValue = parseInt(cleanedText) || 0;
+    const numericValue = parseInt(cleanedText) || QUANTITY_CONFIG.DEFAULT_INCREMENT;
     const clampedIncrement = validateIncrement(numericValue, currentAmount);
     
     setIncrement(clampedIncrement);

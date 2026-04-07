@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
+import { QUANTITY_CONFIG } from '../constants/quantityConfig';
 import { quantitySelectorStyles as styles } from './styles/QuantitySelector.styles';
 
 interface ResultingQuantityInputProps {
@@ -19,7 +20,7 @@ export const ResultingQuantityInput = ({ resultingText, onChangeText }: Resultin
       style={styles.resultingInput}
       value={resultingText}
       onChangeText={onChangeText}
-      placeholder="0"
+      placeholder={QUANTITY_CONFIG.DEFAULT_INCREMENT.toString()}
       placeholderTextColor={styles.resultingInputPlaceholder.color}
       keyboardType="numeric"
     />

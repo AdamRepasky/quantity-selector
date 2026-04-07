@@ -1,8 +1,8 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
-import { quantitySelectorStyles as styles } from './styles/QuantitySelector.styles';
 import { QUANTITY_CONFIG } from '../constants/quantityConfig';
 import { QuantityButton } from './QuantityButton';
+import { quantitySelectorStyles as styles } from './styles/QuantitySelector.styles';
 
 interface IncrementControlsProps {
   incrementText: string;
@@ -30,7 +30,7 @@ export const IncrementControls = ({ incrementText, onTextChange, onButtonPress }
       style={styles.incrementInput}
       value={incrementText}
       onChangeText={onTextChange}
-      placeholder="0"
+      placeholder={QUANTITY_CONFIG.DEFAULT_INCREMENT.toString()}
       placeholderTextColor={styles.incrementInputPlaceholder.color}
       keyboardType="numeric"
     />

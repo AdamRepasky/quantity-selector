@@ -4,8 +4,10 @@
  * @param currentAmount - The current quantity amount
  * @returns The validated increment value, clamped between [-currentAmount, 100]
  */
+import { QUANTITY_CONFIG } from '../constants/quantityConfig';
+
 export const validateIncrement = (value: number, currentAmount: number): number => {
-  const maxIncrement = 100;
+  const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
   const minIncrement = -currentAmount;
   return Math.max(minIncrement, Math.min(maxIncrement, value));
 };
