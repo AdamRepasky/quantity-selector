@@ -43,10 +43,7 @@ export default function FoodProductDemo({
     
     try {
       // Get the current quantity from the QuantitySelector
-      console.log(quantitySelectorRef.current);
-      console.log("log", quantitySelectorRef.current?.getCurrentValue());
       const quantityToSave = quantitySelectorRef.current?.getCurrentValue() ?? currentQuantity;
-      console.log("quantityToSave", quantityToSave);
       const success = await simulateApiCall(quantityToSave);
       
       if (success) {

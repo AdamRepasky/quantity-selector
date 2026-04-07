@@ -30,14 +30,11 @@ export default forwardRef(function QuantitySelector({
   // Expose methods to parent component
   useImperativeHandle(ref, () => ({
     getCurrentValue: () => {
-      console.log('Getting current value:', resultingText);
       const parsedValue = parseInt(resultingText);
       let val = isNaN(parsedValue) ? 0 : parsedValue;
-      console.log('Returning value:', val);
       return val;
     },
     resetIncrement: (newAmount?: number) => {
-      console.log('Resetting increment to zero');
       setIncrement(QUANTITY_CONFIG.DEFAULT_INCREMENT);
       setIncrementText(QUANTITY_CONFIG.DEFAULT_INCREMENT.toString());
       // Reset resulting text to the new saved amount or current amount
