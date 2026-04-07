@@ -10,16 +10,6 @@ const API_CONFIG = {
   NETWORK_DELAY_MS: 1500,
 } as const;
 
-// TypeScript interfaces
-interface ApiResponse {
-  success: boolean;
-  quantity: number;
-  productName: string;
-  timestamp: Date;
-}
-
-// TODO: Implement the food product demonstration page
-// This will showcase the quantity selector component in a realistic context
 
 export default function FoodProductDemo({
   name,
@@ -42,16 +32,8 @@ export default function FoodProductDemo({
     const isSuccess = Math.random() < API_CONFIG.API_SUCCESS_RATE;
     
     if (isSuccess) {
-      const response: ApiResponse = {
-        success: true,
-        quantity,
-        productName: name,
-        timestamp: new Date()
-      };
-      console.log(`API: Saved quantity ${quantity} for product "${name}"`);
       return true;
     } else {
-      console.error('API: Failed to save quantity');
       return false;
     }
   };
