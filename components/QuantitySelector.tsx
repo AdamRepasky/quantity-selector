@@ -2,6 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { QuantitySelectorProps } from '../types';
 
+// Configuration constants
+const QUANTITY_CONFIG = {
+  MAX_INCREMENT: 1000,
+  NEGATIVE_BUTTON_VALUES: [-10, -5, -1],
+  POSITIVE_BUTTON_VALUES: [1, 5, 10],
+  DEFAULT_INCREMENT: 0,
+} as const;
+
 // Responsive sizing based on screen width
 const screenWidth = Dimensions.get('window').width;
 const buttonWidth = Math.min(60, screenWidth / 8);
@@ -14,8 +22,8 @@ export default function QuantitySelector({
   onAmountChange,
   style,
 }: QuantitySelectorProps) {
-  const [increment, setIncrement] = useState(0);
-  const [incrementText, setIncrementText] = useState('0');
+  const [increment, setIncrement] = useState<number>(QUANTITY_CONFIG.DEFAULT_INCREMENT);
+  const [incrementText, setIncrementText] = useState(QUANTITY_CONFIG.DEFAULT_INCREMENT.toString());
   const [resultingText, setResultingText] = useState(currentAmount.toString());
   const [isLoaded, setIsLoaded] = useState(false);
   
@@ -25,7 +33,7 @@ export default function QuantitySelector({
 
   const handleButtonPress = (value: number) => {
     const newIncrement = increment + value;
-    const maxIncrement = 1000;
+    const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
     const minIncrement = -currentAmount;
     const clampedIncrement = Math.max(minIncrement, Math.min(maxIncrement, newIncrement));
     
@@ -41,7 +49,7 @@ export default function QuantitySelector({
     setIncrementText(cleanedText);
     
     const numericValue = parseInt(cleanedText) || 0;
-    const maxIncrement = 1000;
+    const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
     const minIncrement = -currentAmount;
     const clampedIncrement = Math.max(minIncrement, Math.min(maxIncrement, numericValue));
     
@@ -95,9 +103,11 @@ export default function QuantitySelector({
           </View>
 
           <View style={styles.controlsContainer}>
-            {createButton(-10, styles.negativeButtonText, true, false)}
-            {createButton(-5, styles.negativeButtonText, false, false)}
-            {createButton(-1, styles.negativeButtonText, false, false)}
+            {QUANTITY_CONFIG.NEGATIVE_BUTTON_VALUES.map((value, index) => (
+              <React.Fragment key={value}>
+                {createButton(value, styles.negativeButtonText, index === 0, false)}
+              </React.Fragment>
+            ))}
             
             <TextInput
               style={styles.incrementInput}
@@ -107,9 +117,11 @@ export default function QuantitySelector({
               keyboardType="numeric"
             />
             
-            {createButton(1, styles.positiveButtonText, false, false)}
-            {createButton(5, styles.positiveButtonText, false, false)}
-            {createButton(10, styles.positiveButtonText, false, true)}
+            {QUANTITY_CONFIG.POSITIVE_BUTTON_VALUES.map((value, index) => (
+              <React.Fragment key={value}>
+                {createButton(value, styles.positiveButtonText, false, index === QUANTITY_CONFIG.POSITIVE_BUTTON_VALUES.length - 1)}
+              </React.Fragment>
+            ))}
           </View>
 
           <View style={styles.resultingQuantityContainer}>
