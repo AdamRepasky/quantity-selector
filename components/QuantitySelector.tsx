@@ -11,6 +11,22 @@ const QUANTITY_CONFIG = {
   DEFAULT_INCREMENT: 0,
 } as const;
 
+// Validation utilities
+const validateIncrement = (value: number, currentAmount: number): number => {
+  const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
+  const minIncrement = -currentAmount;
+  return Math.max(minIncrement, Math.min(maxIncrement, value));
+};
+
+const formatIncrementText = (increment: number): string => {
+  return increment > 0 ? `+${increment}` : increment.toString();
+};
+
+const cleanNumericInput = (text: string, allowNegative: boolean = false): string => {
+  const pattern = allowNegative ? /[^0-9+-]/g : /[^0-9]/g;
+  return text.replace(pattern, '');
+};
+
 // Quantity selector component
 
 export default forwardRef(function QuantitySelector({
@@ -36,7 +52,7 @@ export default forwardRef(function QuantitySelector({
     },
     resetIncrement: (newAmount?: number) => {
       setIncrement(QUANTITY_CONFIG.DEFAULT_INCREMENT);
-      setIncrementText(QUANTITY_CONFIG.DEFAULT_INCREMENT.toString());
+      setIncrementText(formatIncrementText(QUANTITY_CONFIG.DEFAULT_INCREMENT));
       // Reset resulting text to the new saved amount or current amount
       setResultingText(newAmount?.toString() || currentAmount.toString());
     }
@@ -44,58 +60,50 @@ export default forwardRef(function QuantitySelector({
 
   const handleButtonPress = (value: number) => {
     const newIncrement = increment + value;
-    const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
-    const minIncrement = -currentAmount;
-    const clampedIncrement = Math.max(minIncrement, Math.min(maxIncrement, newIncrement));
+    const clampedIncrement = validateIncrement(newIncrement, currentAmount);
     
     setIncrement(clampedIncrement);
-    setIncrementText(clampedIncrement > 0 ? `+${clampedIncrement}` : clampedIncrement.toString());
+    setIncrementText(formatIncrementText(clampedIncrement));
     const newResulting = currentAmount + clampedIncrement;
     setResultingText(newResulting.toString());
     onAmountChange?.(newResulting);
   };
 
   const handleTextChange = (text: string) => {
-    const cleanedText = text.replace(/[^0-9+-]/g, '');
+    const cleanedText = cleanNumericInput(text, true);
     setIncrementText(cleanedText);
     
     const numericValue = parseInt(cleanedText) || 0;
-    const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
-    const minIncrement = -currentAmount;
-    const clampedIncrement = Math.max(minIncrement, Math.min(maxIncrement, numericValue));
+    const clampedIncrement = validateIncrement(numericValue, currentAmount);
     
     setIncrement(clampedIncrement);
     const newResulting = currentAmount + clampedIncrement;
     setResultingText(newResulting.toString());
     
     // Auto-correct the increment input text if user exceeded limit
-    if (numericValue > maxIncrement || numericValue < minIncrement) {
-      setIncrementText(clampedIncrement > 0 ? `+${clampedIncrement}` : clampedIncrement.toString());
+    if (numericValue !== clampedIncrement) {
+      setIncrementText(formatIncrementText(clampedIncrement));
     }
     
     onAmountChange?.(newResulting);
   };
 
   const handleResultingChange = (text: string) => {
-    const cleanedText = text.replace(/[^0-9]/g, '');
+    const cleanedText = cleanNumericInput(text, false);
     setResultingText(cleanedText);
     
     const numericValue = Math.max(0, parseInt(cleanedText) || 0);
     const newIncrement = numericValue - currentAmount;
-    
-    // Apply MAX_INCREMENT validation
-    const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
-    const minIncrement = -currentAmount;
-    const clampedIncrement = Math.max(minIncrement, Math.min(maxIncrement, newIncrement));
+    const clampedIncrement = validateIncrement(newIncrement, currentAmount);
     
     // Calculate the actual resulting amount based on clamped increment
     const actualResulting = currentAmount + clampedIncrement;
     
     setIncrement(clampedIncrement);
-    setIncrementText(clampedIncrement > 0 ? `+${clampedIncrement}` : clampedIncrement.toString());
+    setIncrementText(formatIncrementText(clampedIncrement));
     
     // Update resulting text to show the clamped value if user exceeded limit
-    if (numericValue > currentAmount + maxIncrement) {
+    if (numericValue > currentAmount + QUANTITY_CONFIG.MAX_INCREMENT) {
       setResultingText(actualResulting.toString());
     }
     
@@ -112,7 +120,7 @@ export default forwardRef(function QuantitySelector({
       onPress={() => handleButtonPress(value)}
     >
       <Text style={[styles.buttonText, textStyle]}>
-        {value > 0 ? `+${value}` : value.toString()}
+        {formatIncrementText(value)}
       </Text>
     </TouchableOpacity>
   );
