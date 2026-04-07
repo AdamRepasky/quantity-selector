@@ -31,17 +31,10 @@ export interface QuantitySelectorRef {
   resetIncrement: (newAmount?: number) => void;
 }
 
-/**
- * Props for the createButton function
- */
 interface ButtonProps {
-  /** The increment value for the button */
   value: number;
-  /** Optional custom text style */
   textStyle?: TextStyle;
-  /** Whether this is the first button in the group */
   isFirst?: boolean;
-  /** Whether this is the last button in the group */
   isLast?: boolean;
 }
 
@@ -183,10 +176,6 @@ export default forwardRef(function QuantitySelector({
   /**
    * Creates a styled increment/decrement button component
    * @param props - Button configuration properties
-   * @param props.value - The increment value for the button
-   * @param props.textStyle - Optional custom text style
-   * @param props.isFirst - Whether this is the first button in the group
-   * @param props.isLast - Whether this is the last button in the group
    * @returns A TouchableOpacity button with appropriate styling
    */
   const createButton = ({ value, textStyle, isFirst, isLast }: ButtonProps) => (
