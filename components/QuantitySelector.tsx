@@ -1,4 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import type { TextStyle } from 'react-native';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { QuantitySelectorProps } from '../types';
 import { quantitySelectorStyles as styles } from './styles/QuantitySelector.styles';
@@ -10,6 +11,19 @@ const QUANTITY_CONFIG = {
   POSITIVE_BUTTON_VALUES: [1, 5, 10],
   DEFAULT_INCREMENT: 0,
 } as const;
+
+// TypeScript interfaces
+export interface QuantitySelectorRef {
+  getCurrentValue: () => number;
+  resetIncrement: (newAmount?: number) => void;
+}
+
+interface ButtonProps {
+  value: number;
+  textStyle?: TextStyle;
+  isFirst?: boolean;
+  isLast?: boolean;
+}
 
 // Validation utilities
 const validateIncrement = (value: number, currentAmount: number): number => {
@@ -33,7 +47,7 @@ export default forwardRef(function QuantitySelector({
   currentAmount,
   onAmountChange,
   style,
-}: QuantitySelectorProps, ref: React.Ref<any>) {
+}: QuantitySelectorProps, ref: React.Ref<QuantitySelectorRef>) {
   const [increment, setIncrement] = useState<number>(QUANTITY_CONFIG.DEFAULT_INCREMENT);
   const [incrementText, setIncrementText] = useState(QUANTITY_CONFIG.DEFAULT_INCREMENT.toString());
   const [resultingText, setResultingText] = useState(currentAmount.toString());
@@ -110,7 +124,7 @@ export default forwardRef(function QuantitySelector({
     onAmountChange?.(actualResulting);
   };
 
-  const createButton = (value: number, textStyle?: any, isFirst?: boolean, isLast?: boolean) => (
+  const createButton = ({ value, textStyle, isFirst, isLast }: ButtonProps) => (
     <TouchableOpacity 
       style={[
         styles.button,
@@ -145,7 +159,7 @@ export default forwardRef(function QuantitySelector({
           <View style={styles.controlsContainer}>
             {QUANTITY_CONFIG.NEGATIVE_BUTTON_VALUES.map((value, index) => (
               <React.Fragment key={value}>
-                {createButton(value, styles.negativeButtonText, index === 0, false)}
+                {createButton({ value, textStyle: styles.negativeButtonText, isFirst: index === 0, isLast: false })}
               </React.Fragment>
             ))}
             
@@ -160,7 +174,7 @@ export default forwardRef(function QuantitySelector({
             
             {QUANTITY_CONFIG.POSITIVE_BUTTON_VALUES.map((value, index) => (
               <React.Fragment key={value}>
-                {createButton(value, styles.positiveButtonText, false, index === QUANTITY_CONFIG.POSITIVE_BUTTON_VALUES.length - 1)}
+                {createButton({ value, textStyle: styles.positiveButtonText, isFirst: false, isLast: index === QUANTITY_CONFIG.POSITIVE_BUTTON_VALUES.length - 1 })}
               </React.Fragment>
             ))}
           </View>

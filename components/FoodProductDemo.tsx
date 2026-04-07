@@ -1,8 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import { FoodProductProps } from '../types';
-import QuantitySelector from './QuantitySelector';
+import QuantitySelector, { QuantitySelectorRef } from './QuantitySelector';
 import { foodProductDemoStyles as styles } from './styles/FoodProductDemo.styles';
+
+// TypeScript interfaces
+interface ApiResponse {
+  success: boolean;
+  quantity: number;
+  productName: string;
+  timestamp: Date;
+}
 
 // TODO: Implement the food product demonstration page
 // This will showcase the quantity selector component in a realistic context
@@ -17,7 +25,7 @@ export default function FoodProductDemo({
 }: FoodProductProps) {
   const [currentQuantity, setCurrentQuantity] = useState(initialQuantity);
   const [isSaving, setIsSaving] = useState(false);
-  const quantitySelectorRef = useRef<any>(null);
+  const quantitySelectorRef = useRef<QuantitySelectorRef>(null);
 
   // Simulate async API call to save quantity
   const simulateApiCall = async (quantity: number): Promise<boolean> => {
@@ -28,6 +36,12 @@ export default function FoodProductDemo({
     const isSuccess = Math.random() > 0.01;
     
     if (isSuccess) {
+      const response: ApiResponse = {
+        success: true,
+        quantity,
+        productName: name,
+        timestamp: new Date()
+      };
       console.log(`API: Saved quantity ${quantity} for product "${name}"`);
       return true;
     } else {
