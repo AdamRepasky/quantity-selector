@@ -97,7 +97,7 @@ export const quantitySelectorStyles = StyleSheet.create({
     borderColor: '#d9dcdf',
     paddingHorizontal: 8,
     paddingVertical: 6,
-    width: 60,
+    width: inputWidth,
     textAlign: 'center',
     fontSize: 12,
     fontWeight: 'bold',
