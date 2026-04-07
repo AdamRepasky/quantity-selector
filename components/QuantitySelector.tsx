@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { QuantitySelectorProps } from '../types';
 import { quantitySelectorStyles as styles } from './styles/QuantitySelector.styles';
@@ -13,11 +13,11 @@ const QUANTITY_CONFIG = {
 
 // Quantity selector component
 
-export default function QuantitySelector({
+export default forwardRef(function QuantitySelector({
   currentAmount,
   onAmountChange,
   style,
-}: QuantitySelectorProps) {
+}: QuantitySelectorProps, ref: React.Ref<any>) {
   const [increment, setIncrement] = useState<number>(QUANTITY_CONFIG.DEFAULT_INCREMENT);
   const [incrementText, setIncrementText] = useState(QUANTITY_CONFIG.DEFAULT_INCREMENT.toString());
   const [resultingText, setResultingText] = useState(currentAmount.toString());
@@ -26,6 +26,24 @@ export default function QuantitySelector({
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    getCurrentValue: () => {
+      console.log('Getting current value:', resultingText);
+      const parsedValue = parseInt(resultingText);
+      let val = isNaN(parsedValue) ? 0 : parsedValue;
+      console.log('Returning value:', val);
+      return val;
+    },
+    resetIncrement: (newAmount?: number) => {
+      console.log('Resetting increment to zero');
+      setIncrement(QUANTITY_CONFIG.DEFAULT_INCREMENT);
+      setIncrementText(QUANTITY_CONFIG.DEFAULT_INCREMENT.toString());
+      // Reset resulting text to the new saved amount or current amount
+      setResultingText(newAmount?.toString() || currentAmount.toString());
+    }
+  }), [resultingText, currentAmount]);
 
   const handleButtonPress = (value: number) => {
     const newIncrement = increment + value;
@@ -136,5 +154,5 @@ export default function QuantitySelector({
       )}
     </View>
   );
-}
+});
 
