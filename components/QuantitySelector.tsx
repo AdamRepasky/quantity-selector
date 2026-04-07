@@ -5,7 +5,7 @@ import { quantitySelectorStyles as styles } from './styles/QuantitySelector.styl
 
 // Configuration constants
 const QUANTITY_CONFIG = {
-  MAX_INCREMENT: 1000,
+  MAX_INCREMENT: 100,
   NEGATIVE_BUTTON_VALUES: [-10, -5, -1],
   POSITIVE_BUTTON_VALUES: [1, 5, 10],
   DEFAULT_INCREMENT: 0,
@@ -70,6 +70,12 @@ export default forwardRef(function QuantitySelector({
     setIncrement(clampedIncrement);
     const newResulting = currentAmount + clampedIncrement;
     setResultingText(newResulting.toString());
+    
+    // Auto-correct the increment input text if user exceeded limit
+    if (numericValue > maxIncrement || numericValue < minIncrement) {
+      setIncrementText(clampedIncrement > 0 ? `+${clampedIncrement}` : clampedIncrement.toString());
+    }
+    
     onAmountChange?.(newResulting);
   };
 
@@ -79,9 +85,24 @@ export default forwardRef(function QuantitySelector({
     
     const numericValue = Math.max(0, parseInt(cleanedText) || 0);
     const newIncrement = numericValue - currentAmount;
-    setIncrement(newIncrement);
-    setIncrementText(newIncrement > 0 ? `+${newIncrement}` : newIncrement.toString());
-    onAmountChange?.(numericValue);
+    
+    // Apply MAX_INCREMENT validation
+    const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
+    const minIncrement = -currentAmount;
+    const clampedIncrement = Math.max(minIncrement, Math.min(maxIncrement, newIncrement));
+    
+    // Calculate the actual resulting amount based on clamped increment
+    const actualResulting = currentAmount + clampedIncrement;
+    
+    setIncrement(clampedIncrement);
+    setIncrementText(clampedIncrement > 0 ? `+${clampedIncrement}` : clampedIncrement.toString());
+    
+    // Update resulting text to show the clamped value if user exceeded limit
+    if (numericValue > currentAmount + maxIncrement) {
+      setResultingText(actualResulting.toString());
+    }
+    
+    onAmountChange?.(actualResulting);
   };
 
   const createButton = (value: number, textStyle?: any, isFirst?: boolean, isLast?: boolean) => (
