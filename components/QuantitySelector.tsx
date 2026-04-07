@@ -14,29 +14,65 @@ const QUANTITY_CONFIG = {
 } as const;
 
 // TypeScript interfaces
+/**
+ * Interface for QuantitySelector ref methods
+ */
 export interface QuantitySelectorRef {
+  /**
+   * Returns the current resulting quantity value
+   * @returns The current resulting quantity (parsed from resultingText, defaults to 0 if invalid)
+   */
   getCurrentValue: () => number;
+  
+  /**
+   * Resets the increment to default value and optionally updates the current amount
+   * @param newAmount - Optional new amount to set as the current amount
+   */
   resetIncrement: (newAmount?: number) => void;
 }
 
+/**
+ * Props for the createButton function
+ */
 interface ButtonProps {
+  /** The increment value for the button */
   value: number;
+  /** Optional custom text style */
   textStyle?: TextStyle;
+  /** Whether this is the first button in the group */
   isFirst?: boolean;
+  /** Whether this is the last button in the group */
   isLast?: boolean;
 }
 
 // Validation utilities
+/**
+ * Validates and clamps an increment value within acceptable bounds
+ * @param value - The increment value to validate
+ * @param currentAmount - The current quantity amount
+ * @returns The validated increment value, clamped between [-currentAmount, 100]
+ */
 const validateIncrement = (value: number, currentAmount: number): number => {
   const maxIncrement = QUANTITY_CONFIG.MAX_INCREMENT;
   const minIncrement = -currentAmount;
   return Math.max(minIncrement, Math.min(maxIncrement, value));
 };
 
+/**
+ * Formats an increment value for display with appropriate sign
+ * @param increment - The increment value to format
+ * @returns Formatted increment text (e.g., "+5", "-3", "0")
+ */
 const formatIncrementText = (increment: number): string => {
   return increment > 0 ? `+${increment}` : increment.toString();
 };
 
+/**
+ * Cleans input text to contain only numeric characters (and optionally negative sign)
+ * @param text - The input text to clean
+ * @param allowNegative - Whether to allow negative sign
+ * @returns Cleaned text containing only allowed numeric characters
+ */
 const cleanNumericInput = (text: string, allowNegative: boolean = false): string => {
   const pattern = allowNegative ? /[^0-9+-]/g : /[^0-9]/g;
   return text.replace(pattern, '');
@@ -73,6 +109,10 @@ export default forwardRef(function QuantitySelector({
     }
   }), [resultingText, currentAmount]);
 
+  /**
+   * Handles increment/decrement button press events
+   * @param value - The increment value to apply (positive or negative)
+   */
   const handleButtonPress = (value: number) => {
     const newIncrement = increment + value;
     const clampedIncrement = validateIncrement(newIncrement, currentAmount);
@@ -84,6 +124,10 @@ export default forwardRef(function QuantitySelector({
     onAmountChange?.(newResulting);
   };
 
+  /**
+   * Handles changes to the increment input field
+   * @param text - The new text value from the input field
+   */
   const handleTextChange = (text: string) => {
     const cleanedText = cleanNumericInput(text, true);
     
@@ -110,6 +154,10 @@ export default forwardRef(function QuantitySelector({
     onAmountChange?.(newResulting);
   };
 
+  /**
+   * Handles changes to the resulting quantity input field
+   * @param text - The new text value from the resulting quantity field
+   */
   const handleResultingChange = (text: string) => {
     const cleanedText = cleanNumericInput(text, false);
     setResultingText(cleanedText);
@@ -132,6 +180,15 @@ export default forwardRef(function QuantitySelector({
     onAmountChange?.(actualResulting);
   };
 
+  /**
+   * Creates a styled increment/decrement button component
+   * @param props - Button configuration properties
+   * @param props.value - The increment value for the button
+   * @param props.textStyle - Optional custom text style
+   * @param props.isFirst - Whether this is the first button in the group
+   * @param props.isLast - Whether this is the last button in the group
+   * @returns A TouchableOpacity button with appropriate styling
+   */
   const createButton = ({ value, textStyle, isFirst, isLast }: ButtonProps) => (
     <TouchableOpacity 
       style={[
